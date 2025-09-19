@@ -90,6 +90,8 @@ export const toFormValues = (product, shouldDuplicate) => {
     gracePeriodPayment: product.gracePeriodPayment ?? 0,
     gracePeriodEnrolment: product.gracePeriodEnrolment ?? 0,
     gracePeriodRenewal: product.gracePeriodRenewal ?? 0,
+    ageMaximal: product.ageMaximal ?? 0,
+    ageMinimal: product.ageMinimal ?? 0,
     ceilingInterpretation: product.ceilingInterpretation ?? "HEALTH_FACILITY_TYPE",
   };
 };
@@ -118,6 +120,8 @@ export const toInputValues = (values) => {
     services,
     ceilingType,
     maxInstallments,
+    ageMinimal,
+    ageMaximal,
     ...inputValues
   } = values;
 
@@ -160,6 +164,8 @@ export const toInputValues = (values) => {
     locationUuid: location?.uuid,
     conversionProductUuid: conversionProduct?.uuid,
     ceilingType: ceilingType,
+    ageMinimal: ageMinimal,
+    ageMaximal: ageMaximal,
   };
 
   return val;
