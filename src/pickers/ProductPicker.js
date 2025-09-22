@@ -23,7 +23,8 @@ const ProductPicker = (props) => {
     filterSelectedOptions,
     locationId,
     enrollmentDate,
-    canFetch
+    canFetch,
+    invalidAgeError
   } = props;
   const modulesManager = useModulesManager();
   const [filters, setFilters] = useState({
@@ -71,6 +72,8 @@ const ProductPicker = (props) => {
         >
           <TextField
             {...inputProps}
+            error={!!invalidAgeError}
+            helperText={invalidAgeError}
             required={required}
             label={(withLabel && (label || nullLabel)) || formatMessage("Product")}
             placeholder={(withPlaceholder && placeholder) || formatMessage("ProductPicker.placeholder")}
