@@ -24,7 +24,7 @@ const ProductPicker = (props) => {
     locationId,
     enrollmentDate,
     canFetch,
-    invalidAgeError
+    invalidAgeError,
   } = props;
   const modulesManager = useModulesManager();
   const [filters, setFilters] = useState({
@@ -32,6 +32,10 @@ const ProductPicker = (props) => {
   });
   const [currentString, setCurrentString] = useState(EMPTY_STRING);
   const { formatMessage, formatMessageWithValues } = useTranslations("product", modulesManager);
+  const hasValidEnrollmentDate = !!enrollmentDate && moment(enrollmentDate).isValid();
+  const canFetchFromProp = canFetch === undefined ? true : canFetch === true;
+  const effectiveCanFetch = canFetchFromProp && hasValidEnrollmentDate;
+  const enrollmentDateRequiredError = !hasValidEnrollmentDate ? formatMessage("ProductPicker.enrollmentDateRequired") : null;
   const {
     isLoading,
     error,
@@ -45,7 +49,7 @@ const ProductPicker = (props) => {
       required={required}
       error={error}
       readOnly={readOnly}
-      options={ canFetch && canFetch == true ? products : canFetch == undefined ? products : [] }
+      options={effectiveCanFetch ? products : []}
       isLoading={isLoading}
       value={value}
       getOptionLabel={(option) => `${option.code} ${option.name}`}
@@ -53,15 +57,17 @@ const ProductPicker = (props) => {
       setCurrentString={setCurrentString}
       filterOptions={filter}
       filterSelectedOptions={filterSelectedOptions}
-      onInputChange={(search) =>
+      onInputChange={(search) => {
+        if (!effectiveCanFetch) return;
+        const formattedEnrollmentDate = moment(enrollmentDate).format(DATE_FORMAT);
         setFilters(() => ({
           first: PRODUCT_QUANTITY_LIMIT,
           search,
           location: locationId,
-          dateFrom: moment(enrollmentDate).format(DATE_FORMAT),
-          dateTo: moment(enrollmentDate).format(DATE_FORMAT),
-        }))
-      }
+          dateFrom: formattedEnrollmentDate,
+          dateTo: formattedEnrollmentDate,
+        }));
+      }}
       renderInput={(inputProps) => (
         <Tooltip
           title={
@@ -72,8 +78,8 @@ const ProductPicker = (props) => {
         >
           <TextField
             {...inputProps}
-            error={!!invalidAgeError}
-            helperText={invalidAgeError}
+            error={!!invalidAgeError || !!enrollmentDateRequiredError}
+            helperText={invalidAgeError || enrollmentDateRequiredError}
             required={required}
             label={(withLabel && (label || nullLabel)) || formatMessage("Product")}
             placeholder={(withPlaceholder && placeholder) || formatMessage("ProductPicker.placeholder")}
