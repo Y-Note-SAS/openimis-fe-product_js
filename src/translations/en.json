@@ -2,7 +2,6 @@
   "product.Product": "Product",
   "product.ProductPicker.placeholder": "Search Product…",
   "product.ProductPicker.aboveLimit": "Over {limit} products found. For specific results, please use the search bar.",
-  "product.ProductPicker.enrollmentDateRequired": "Select enrollment date first",
   "product.Product.none": "None",
   "product.name": "Name",
   "product.code": "Code",
