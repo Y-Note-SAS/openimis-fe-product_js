@@ -53,7 +53,8 @@ const ProductPicker = (props) => {
       setCurrentString={setCurrentString}
       filterOptions={filter}
       filterSelectedOptions={filterSelectedOptions}
-      onInputChange={(search) =>
+      onInputChange={(search) => {
+        if (canFetch !== undefined && canFetch === false) return;
         setFilters(() => ({
           first: PRODUCT_QUANTITY_LIMIT,
           search,
@@ -61,7 +62,7 @@ const ProductPicker = (props) => {
           dateFrom: moment(enrollmentDate).format(DATE_FORMAT),
           dateTo: moment(enrollmentDate).format(DATE_FORMAT),
         }))
-      }
+      }}
       renderInput={(inputProps) => (
         <Tooltip
           title={
